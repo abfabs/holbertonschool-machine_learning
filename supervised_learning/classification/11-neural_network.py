@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
-"""Defines a NeuralNetwork class with one hidden layer for binary classification."""
+"""
+Defines a NeuralNetwork class with one hidden layer
+for binary classification.
+"""
 import numpy as np
 
 
 class NeuralNetwork:
-    """Neural network with one hidden layer performing binary classification."""
+    """Neural network with one hidden layer for binary classification."""
 
     def __init__(self, nx, nodes):
         if not isinstance(nx, int):
@@ -49,7 +52,7 @@ class NeuralNetwork:
         return self.__A2
 
     def forward_prop(self, X):
-        """Calculates forward propagation"""
+        """Calculates forward propagation."""
         z1 = np.matmul(self.__W1, X) + self.__b1
         self.__A1 = 1 / (1 + np.exp(-z1))
 
@@ -60,7 +63,7 @@ class NeuralNetwork:
 
     def cost(self, Y, A):
         """
-        Calculates the cost using logistic regression
+        Calculates the cost using logistic regression.
 
         Y: correct labels, shape (1, m)
         A: activated output, shape (1, m)
