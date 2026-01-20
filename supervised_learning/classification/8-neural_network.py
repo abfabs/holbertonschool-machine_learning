@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""Defines a NeuralNetwork class with one hidden layer for binary classification."""
+"""Defines a NeuralNetwork class with one hidden 
+layer for binary classification."""
 import numpy as np
 
 
 class NeuralNetwork:
-    """Neural network with one hidden layer performing binary classification."""
+    """Neural network with one hidden layer 
+    performing binary classification."""
 
     def __init__(self, nx, nodes):
         """
