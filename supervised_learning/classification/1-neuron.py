@@ -25,17 +25,17 @@ class Neuron:
         self.__b = 0
         self.__A = 0
 
-    # Getter to W
+    # Getter of W
     @property
     def W(self):
         return self.__W
 
-    # Getter to b
+    # Getter of b
     @property
     def b(self):
         return self.__b
 
-    # Getter to A
+    # Getter of A
     @property
     def A(self):
         return self.__A
