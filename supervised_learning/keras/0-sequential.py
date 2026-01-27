@@ -4,7 +4,7 @@
 Builds a neural network using Keras Sequential API
 """
 
-import tensorflow as tf
+import tensorflow.keras as K
 
 
 def build_model(nx, layers, activations, lambtha, keep_prob):
@@ -18,25 +18,25 @@ def build_model(nx, layers, activations, lambtha, keep_prob):
 
     Returns: keras model
     """
-    model = tf.keras.Sequential()
-    reg = tf.keras.regularizers.l2(lambtha)
+    model = K.Sequential()
+    reg = K.regularizers.l2(lambtha)
 
     for i, (units, act) in enumerate(zip(layers, activations)):
         if i == 0:
-            model.add(tf.keras.layers.Dense(
+            model.add(K.layers.Dense(
                 units=units,
                 activation=act,
                 kernel_regularizer=reg,
                 input_shape=(nx,)
             ))
         else:
-            model.add(tf.keras.layers.Dense(
+            model.add(K.layers.Dense(
                 units=units,
                 activation=act,
                 kernel_regularizer=reg
             ))
 
         if i != len(layers) - 1:
-            model.add(tf.keras.layers.Dropout(rate=1 - keep_prob))
+            model.add(K.layers.Dropout(rate=1 - keep_prob))
 
     return model
