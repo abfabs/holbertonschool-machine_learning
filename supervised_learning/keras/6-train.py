@@ -8,9 +8,18 @@ and early stopping
 import tensorflow.keras as K
 
 
-def train_model(network, data, labels, batch_size, epochs, 
-                validation_data=None,early_stopping=False, 
-                patience=0, verbose=True, shuffle=False):
+def train_model(
+    network,
+    data,
+    labels,
+    batch_size,
+    epochs,
+    validation_data=None,
+    early_stopping=False,
+    patience=0,
+    verbose=True,
+    shuffle=False
+):
     """
     Trains a model using mini-batch gradient descent.
 
@@ -30,10 +39,12 @@ def train_model(network, data, labels, batch_size, epochs,
     callbacks = []
 
     if early_stopping and validation_data is not None:
-        callbacks.append(K.callbacks.EarlyStopping(
-            monitor='val_loss',
-            patience=patience
-        ))
+        callbacks.append(
+            K.callbacks.EarlyStopping(
+                monitor='val_loss',
+                patience=patience
+            )
+        )
 
     return network.fit(
         x=data,

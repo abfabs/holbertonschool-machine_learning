@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """
 8-train.py
-Trains a keras model using mini-batch gradient descent with 
-optional validation, early stopping, learning rate decay, 
-and saving the best model
+Trains a keras model using mini-batch gradient descent with optional validation,
+early stopping, learning rate decay, and saving the best model
 """
 
 import tensorflow.keras as K
