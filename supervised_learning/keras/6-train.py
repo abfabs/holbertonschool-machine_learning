@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 6-train.py
-Trains a keras model using mini-batch gradient descent with optional validation
+Trains a keras model using mini-batch gd with optional validation
 and early stopping
 """
 
