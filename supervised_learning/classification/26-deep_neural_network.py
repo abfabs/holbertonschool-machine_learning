@@ -52,6 +52,17 @@ class DeepNeuralNetwork:
         return self.__weights
 
     def forward_prop(self, X):
+        """
+        Perform forward propagation for the network.
+
+        Args:
+            X (np.ndarray): Input data of shape (nx, m).
+
+        Returns:
+            tuple: (A_L, cache)
+                A_L is the activated output of the last layer
+                cache is the dictionary of intermediary activations
+        """
         self.__cache["A0"] = X
 
         for layer in range(1, self.__L + 1):
