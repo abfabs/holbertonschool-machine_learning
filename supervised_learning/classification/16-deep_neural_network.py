@@ -1,24 +1,18 @@
 #!/usr/bin/env python3
-"""16-deep_neural_network.py"""
-
 import numpy as np
 
 
 class DeepNeuralNetwork:
-    """Defines a deep neural network for binary classification."""
+    """Deep neural network performing binary classification."""
 
     def __init__(self, nx, layers):
-        """
-        nx: number of input features
-        layers: list of nodes in each layer
-        """
-        # 1) Validate nx
+        # Validate nx
         if not isinstance(nx, int):
             raise TypeError("nx must be an integer")
         if nx < 1:
             raise ValueError("nx must be a positive integer")
 
-        # 2) Validate layers
+        # Validate layers
         if not isinstance(layers, list) or len(layers) == 0:
             raise TypeError("layers must be a list of positive integers")
         if not all(isinstance(n, int) and n > 0 for n in layers):
@@ -29,11 +23,9 @@ class DeepNeuralNetwork:
         self.cache = {}
         self.weights = {}
 
-        # He initialization (one loop allowed)
+        # He initialization (one loop)
         prev = nx
         for l, nodes in enumerate(layers, start=1):
-            self.weights[f"W{l}"] = (
-                np.random.randn(nodes, prev) * np.sqrt(2 / prev)
-            )
+            self.weights[f"W{l}"] = np.random.randn(nodes, prev) * np.sqrt(2 / prev)
             self.weights[f"b{l}"] = np.zeros((nodes, 1))
             prev = nodes
