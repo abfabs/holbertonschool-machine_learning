@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 '''
-Modulus that has a function that performs valid convolution
+Modulus that has a function that performs convolution
 '''
 import numpy as np
 
