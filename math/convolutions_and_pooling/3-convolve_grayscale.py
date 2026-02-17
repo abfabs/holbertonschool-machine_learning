@@ -1,67 +1,41 @@
 #!/usr/bin/env python3
-"""3-convolve_grayscale.py"""
-
+'''
+Modulus that has a function that performs valid convolution
+'''
 import numpy as np
 
 
 def convolve_grayscale(images, kernel, padding='same', stride=(1, 1)):
-    """
-    Performs a convolution on grayscale images with padding + stride.
-
-    images: np.ndarray (m, h, w)
-    kernel: np.ndarray (kh, kw)
-    padding: 'same', 'valid', or (ph, pw)
-    stride: (sh, sw)
-
-    Returns: np.ndarray (m, out_h, out_w)
-    """
+    '''
+    Function that performs a valid convolution grayscale images:
+        images: np.ndarray. images to be convoluted
+        kernel. np.ndarray. filter to be used
+        padding. tuple with paddin height and weight or same or valid
+        stride. tuple, steps at the filter is moving
+    '''
     m, h, w = images.shape
     kh, kw = kernel.shape
     sh, sw = stride
+    ph, pw = (0, 0)
 
-    # Determine padding (top/bottom, left/right)
-    if padding == 'valid':
-        pt = pb = pl = pr = 0
+    if padding == 'same':
+        ph = int(((h - 1) * sh + kh - h) / 2) + 1
+        pw = int(((w - 1) * sw + kw - w) / 2) + 1
 
-    elif padding == 'same':
-        # Target output size for "same" with stride
-        out_h = int(np.ceil(h / sh))
-        out_w = int(np.ceil(w / sw))
-
-        # Total padding needed to achieve that output
-        pad_h = max((out_h - 1) * sh + kh - h, 0)
-        pad_w = max((out_w - 1) * sw + kw - w, 0)
-
-        # Split padding (can be asymmetric)
-        pt = pad_h // 2
-        pb = pad_h - pt
-        pl = pad_w // 2
-        pr = pad_w - pl
-
-    else:
+    if isinstance(padding, tuple):
         ph, pw = padding
-        pt = pb = ph
-        pl = pr = pw
 
-    # Pad images with zeros
-    padded = np.pad(
-        images,
-        ((0, 0), (pt, pb), (pl, pr)),
-        mode='constant'
-    )
+    padded_img = np.pad(images, ((0, 0), (ph, ph), (pw, pw)), 'constant')
 
-    # Output dimensions after padding + stride
-    out_h = ((padded.shape[1] - kh) // sh) + 1
-    out_w = ((padded.shape[2] - kw) // sw) + 1
+    ch = int(((h + 2 * ph - kh) / sh) + 1)
+    cw = int(((w + 2 * pw - kw) / sw) + 1)
+    conv_dim = (m, ch, cw)
+    conv = np.zeros(conv_dim)
 
-    output = np.zeros((m, out_h, out_w))
-
-    # Only 2 loops: over output spatial positions
-    for i in range(out_h):
-        for j in range(out_w):
-            i0 = i * sh
-            j0 = j * sw
-            patch = padded[:, i0:i0 + kh, j0:j0 + kw]  # (m, kh, kw)
-            output[:, i, j] = np.sum(patch * kernel, axis=(1, 2))
-
-    return output
+    for i in range(conv_dim[1]):
+        for j in range(conv_dim[2]):
+            image_slice = padded_img[:,
+                                     i * sh:i * sh + kh,
+                                     j * sw:j * sw + kw]
+            conv[:, i, j] = np.sum(image_slice * kernel, axis=(1, 2))
+    return conv
