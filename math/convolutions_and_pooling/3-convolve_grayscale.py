@@ -13,42 +13,50 @@ def convolve_grayscale(images, kernel, padding='same', stride=(1, 1)):
     padding: 'same', 'valid', or (ph, pw)
     stride: (sh, sw)
 
-    Returns: np.ndarray of convolved images
+    Returns: np.ndarray (m, out_h, out_w)
     """
     m, h, w = images.shape
     kh, kw = kernel.shape
     sh, sw = stride
 
-    # Determine padding
+    # Determine padding (top/bottom, left/right)
     if padding == 'valid':
-        ph, pw = 0, 0
+        pt = pb = pl = pr = 0
+
     elif padding == 'same':
-        # Output should be ceil(h/sh) x ceil(w/sw)
+        # Target output size for "same" with stride
         out_h = int(np.ceil(h / sh))
         out_w = int(np.ceil(w / sw))
 
-        # Solve for padding needed to hit those output sizes:
-        # out_h = floor((h + 2ph - kh)/sh) + 1
-        # => 2ph = (out_h - 1)*sh + kh - h
-        ph = int(np.ceil(((out_h - 1) * sh + kh - h) / 2))
-        pw = int(np.ceil(((out_w - 1) * sw + kw - w) / 2))
+        # Total padding needed to achieve that output
+        pad_h = max((out_h - 1) * sh + kh - h, 0)
+        pad_w = max((out_w - 1) * sw + kw - w, 0)
+
+        # Split padding (can be asymmetric)
+        pt = pad_h // 2
+        pb = pad_h - pt
+        pl = pad_w // 2
+        pr = pad_w - pl
+
     else:
         ph, pw = padding
+        pt = pb = ph
+        pl = pr = pw
 
     # Pad images with zeros
     padded = np.pad(
         images,
-        ((0, 0), (ph, ph), (pw, pw)),
+        ((0, 0), (pt, pb), (pl, pr)),
         mode='constant'
     )
 
-    # Compute output dims
-    out_h = ((h + 2 * ph - kh) // sh) + 1
-    out_w = ((w + 2 * pw - kw) // sw) + 1
+    # Output dimensions after padding + stride
+    out_h = ((padded.shape[1] - kh) // sh) + 1
+    out_w = ((padded.shape[2] - kw) // sw) + 1
 
     output = np.zeros((m, out_h, out_w))
 
-    # Only 2 loops: loop over i and j (output spatial positions)
+    # Only 2 loops: over output spatial positions
     for i in range(out_h):
         for j in range(out_w):
             i0 = i * sh
