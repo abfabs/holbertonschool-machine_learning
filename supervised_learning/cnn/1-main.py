@@ -24,3 +24,4 @@ if __name__ == "__main__":
     plt.show()
     plt.imshow(A[0, :, :, 1])
     plt.show()
+    
