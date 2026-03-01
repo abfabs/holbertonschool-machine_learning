@@ -35,8 +35,10 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
         raise ValueError("padding must be 'same' or 'valid'")
 
     if padding == "valid":
-        pad_top = pad_bottom = 0
-        pad_left = pad_right = 0
+        pad_top = 0
+        pad_bottom = 0
+        pad_left = 0
+        pad_right = 0
     else:
         pad_h = max((h_new - 1) * sh + kh - h_prev, 0)
         pad_w = max((w_new - 1) * sw + kw - w_prev, 0)
@@ -69,10 +71,10 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
             j0 = j * sw
             j1 = j0 + kw
 
-            a_slice = A_pad[:, i0:i1, j0:j1, :]  # (m, kh, kw, c_prev)
+            a_slice = A_pad[:, i0:i1, j0:j1, :]
 
             for k in range(c_new):
-                dz_ijk = dZ[:, i, j, k]  # (m,)
+                dz_ijk = dZ[:, i, j, k]
                 dz_reshaped = dz_ijk[:, None, None, None]
 
                 dW[:, :, :, k] += np.sum(a_slice * dz_reshaped, axis=0)
