@@ -6,10 +6,10 @@ import tensorflow.keras as K
 
 
 class Yolo:
-    """YOLO v3 object detection class."""
+    """YOLO v3 object detection class"""
 
     def __init__(self, model_path, classes_path, class_t, nms_t, anchors):
-        """Initialize the YOLO model."""
+        """Class constructor"""
         self.model = K.models.load_model(model_path, compile=False)
 
         with open(classes_path, "r", encoding="utf-8") as f:
@@ -20,13 +20,13 @@ class Yolo:
         self.anchors = anchors
 
     def process_outputs(self, outputs, image_size):
-        """Process Darknet model outputs."""
+        """Process Darknet model outputs"""
         boxes = []
         box_confidences = []
         box_class_probs = []
 
-        input_h = self.model.input.shape[1]
-        input_w = self.model.input.shape[2]
+        input_w = self.model.input.shape[1]
+        input_h = self.model.input.shape[2]
 
         image_h = image_size[0]
         image_w = image_size[1]
@@ -53,8 +53,8 @@ class Yolo:
             anchor_w = self.anchors[i, :, 0].reshape((1, 1, anchor_boxes))
             anchor_h = self.anchors[i, :, 1].reshape((1, 1, anchor_boxes))
 
-            b_w = (anchor_w * np.exp(t_w)) / input_w
-            b_h = (anchor_h * np.exp(t_h)) / input_h
+            b_w = (np.exp(t_w) * anchor_w) / input_w
+            b_h = (np.exp(t_h) * anchor_h) / input_h
 
             x1 = (b_x - (b_w / 2)) * image_w
             y1 = (b_y - (b_h / 2)) * image_h
