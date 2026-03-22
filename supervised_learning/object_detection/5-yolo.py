@@ -164,7 +164,7 @@ class Yolo:
         images = []
         image_paths = []
 
-        for filename in os.listdir(folder_path):
+        for filename in sorted(os.listdir(folder_path)):
             path = os.path.join(folder_path, filename)
             if os.path.isfile(path):
                 image = cv2.imread(path)
