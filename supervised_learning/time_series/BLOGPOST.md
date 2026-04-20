@@ -239,4 +239,4 @@ hardest challenges are almost never the model architecture — they're data
 quality, feature engineering, and resisting the urge to overfit on historical
 regimes that no longer apply.
 
-**Full code:** [GitHub Repository](https://github.com/abfabs/holbertonschool-machine_learning/tree/main/supervised_learning/time_series)
+**Full code:** [GitHub Repository: github.com/abfabs](https://github.com/abfabs/holbertonschool-machine_learning/tree/main/supervised_learning/time_series)
