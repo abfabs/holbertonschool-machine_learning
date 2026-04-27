@@ -2,7 +2,7 @@
 """
 NLP - Word Embeddings - Task 3
 
-Utility to convert a trained Gensim Word2Vec model into a Keras Embedding layer.
+Utility to convert a trained Gensim Word2Vec model into an Embedding layer.
 """
 
 import tensorflow as tf
