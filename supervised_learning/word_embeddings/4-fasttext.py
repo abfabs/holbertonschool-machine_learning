@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-NLP - Word Embeddings - Task 4
+4
 """
 
 import gensim
@@ -10,14 +10,14 @@ def fasttext_model(sentences, vector_size=100, min_count=5,
                    window=5, negative=5, cbow=True,
                    epochs=5, seed=0, workers=1):
     """
-    Creates, builds, and trains a Gensim FastText model.
+    Creates, builds, and trains a gensim FastText model.
 
     sentences: list of sentences to be trained on
     vector_size: dimensionality of the embedding layer
-    min_count: minimum number of occurrences of a word for training
+    min_count: minimum number of occurrences of a word for use in training
     window: maximum distance between the current and predicted word
     negative: size of negative sampling
-    cbow: True for CBOW, False for Skip-gram
+    cbow: True for CBOW; False for Skip-gram
     epochs: number of iterations to train over
     seed: seed for the random number generator
     workers: number of worker threads to train the model
@@ -25,7 +25,6 @@ def fasttext_model(sentences, vector_size=100, min_count=5,
     Returns: the trained model
     """
     sg = 0 if cbow else 1
-
     model = gensim.models.FastText(
         sentences=sentences,
         vector_size=vector_size,
@@ -37,5 +36,4 @@ def fasttext_model(sentences, vector_size=100, min_count=5,
         seed=seed,
         workers=workers
     )
-
     return model
