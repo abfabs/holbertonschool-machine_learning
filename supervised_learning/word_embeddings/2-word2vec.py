@@ -1,33 +1,37 @@
 #!/usr/bin/env python3
-"""Module to train a Word2Vec model using gensim"""
-import gensim
+"""Function to create, build, and train a Word2Vec model using Gensim"""
+from gensim.models import Word2Vec
 
 
 def word2vec_model(sentences, vector_size=100, min_count=5, window=5,
                    negative=5, cbow=True, epochs=5, seed=0, workers=1):
     """
-    Creates, builds, and trains a gensim word2vec model
+    Creates, builds, and trains a gensim Word2Vec model.
+
+    sentences:   list of sentences (list of word lists) for training
+    vector_size: dimensionality of the embedding vectors
+    min_count:   minimum word frequency threshold
+    window:      max distance between current and predicted word
+    negative:    number of negative samples
+    cbow:        True → CBOW (sg=0), False → Skip-gram (sg=1)
+    epochs:      number of training iterations
+    seed:        random number generator seed
+    workers:     number of worker threads
+
+    Returns: trained Word2Vec model
     """
-    # Initialize the model with parameters but without sentences
-    # sg=0 for CBOW, sg=1 for Skip-gram
-    model = gensim.models.Word2Vec(
+    sg = 0 if cbow else 1
+
+    model = Word2Vec(
+        sentences=sentences,
         vector_size=vector_size,
         min_count=min_count,
         window=window,
         negative=negative,
-        sg=0 if cbow else 1,
+        sg=sg,
+        epochs=epochs,
         seed=seed,
         workers=workers
-    )
-
-    # Build the vocabulary from the sentences
-    model.build_vocab(sentences)
-
-    # Train the model explicitly
-    model.train(
-        sentences,
-        total_examples=model.corpus_count,
-        epochs=epochs
     )
 
     return model
