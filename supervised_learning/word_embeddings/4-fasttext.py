@@ -12,7 +12,6 @@ def fasttext_model(sentences, vector_size=100, min_count=5,
     """
     Trains a FastText model on a list of tokenized sentences.
     """
-    
     # Set the training algorithm
     sg = 0 if cbow else 1
 
