@@ -24,12 +24,12 @@ def word2vec_model(sentences, vector_size=100, min_count=5, window=5,
 
     model = gensim.models.Word2Vec(
         sentences=sentences,
-        vector_size=vector_size,
+        size=vector_size,
         min_count=min_count,
         window=window,
         negative=negative,
         sg=sg,
-        epochs=epochs,
+        iter=epochs,
         seed=seed,
         workers=workers
     )
