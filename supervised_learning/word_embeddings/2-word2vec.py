@@ -8,24 +8,22 @@ def word2vec_model(sentences, vector_size=100, min_count=5, window=5,
     """
     Creates, builds, and trains a gensim word2vec model
     """
+    # Initialize the model with parameters but without sentences
     # sg=0 for CBOW, sg=1 for Skip-gram
-    sg = 0 if cbow else 1
-
-    # Initialize model without sentences first to ensure seed is applied
     model = gensim.models.Word2Vec(
         vector_size=vector_size,
         min_count=min_count,
         window=window,
         negative=negative,
-        sg=sg,
+        sg=0 if cbow else 1,
         seed=seed,
         workers=workers
     )
 
-    # Build vocabulary
+    # Build the vocabulary from the sentences
     model.build_vocab(sentences)
 
-    # Train model
+    # Train the model explicitly
     model.train(
         sentences,
         total_examples=model.corpus_count,
