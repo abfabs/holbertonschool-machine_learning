@@ -1,50 +1,50 @@
 #!/usr/bin/env python3
-
+"""Module for Bag of Words embedding"""
 import numpy as np
-import re
+
 
 def bag_of_words(sentences, vocab=None):
     """
-    Creates a bag of words embedding matrix.
-    
-    Args:
-        sentences: list of sentences to analyze
-        vocab: list of the vocabulary words to use for the analysis
-               If None, all words within sentences should be used
-               
-    Returns:
-        embeddings: numpy.ndarray of shape (s, f) containing the embeddings
-        features: list of the features used for embeddings
+    Creates a bag of words embedding matrix
     """
-    # 1. Preprocess sentences: lowercase and filter words
     processed_sentences = []
-    all_words = []
     
     for sentence in sentences:
-        # Lowercase and replace punctuation with space or remove it
-        # This regex handles possessives (children's -> children) and punctuation
-        words = re.findall(r'\b\w+\b', sentence.lower())
-        processed_sentences.append(words)
-        all_words.extend(words)
+        # 1. Lowercase
+        # 2. Replace characters like '!' or '.' with space
+        # 3. Specifically handle "children's" by replacing "'s" with space
+        #    before splitting, or simply filter out single 's'
+        line = sentence.lower().replace("'s", "")
+        
+        # Clean non-alphabetic characters (except spaces)
+        words = ""
+        for char in line:
+            if char.isalpha() or char.isspace():
+                words += char
+            else:
+                words += " "
+        
+        processed_sentences.append(words.split())
 
-    # 2. Define vocabulary (features)
     if vocab is None:
-        # Get unique words and sort alphabetically
+        # Build vocab from all words found
+        all_words = []
+        for s in processed_sentences:
+            all_words.extend(s)
         features = sorted(list(set(all_words)))
     else:
         features = vocab
 
-    # Map words to indices for faster lookup
-    vocab_dict = {word: i for i, word in enumerate(features)}
-    
-    # 3. Create embedding matrix
+    # Create the matrix
     s = len(sentences)
     f = len(features)
     embeddings = np.zeros((s, f), dtype=int)
+    
+    feature_index = {word: i for i, word in enumerate(features)}
 
-    for i, words in enumerate(processed_sentences):
-        for word in words:
-            if word in vocab_dict:
-                embeddings[i, vocab_dict[word]] += 1
+    for i, sentence_words in enumerate(processed_sentences):
+        for word in sentence_words:
+            if word in feature_index:
+                embeddings[i, feature_index[word]] += 1
 
-    return embeddings, features
+    return embeddings, np.array(features)
