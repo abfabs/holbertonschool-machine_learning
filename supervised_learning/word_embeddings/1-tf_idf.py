@@ -5,11 +5,11 @@ import numpy as np
 
 def tf_idf(sentences, vocab=None):
     """
-    Creates a TF-IDF embedding matrix
+    Creates a TF-IDF embedding matrix matching standard smoothed output
     """
     processed_sentences = []
     for sentence in sentences:
-        # Standardize: lowercase and handle possessives/punctuation
+        # Handle possessives and clean punctuation
         line = sentence.lower().replace("'s", "")
         clean_line = "".join([c if c.isalpha() else " " for c in line])
         processed_sentences.append(clean_line.split())
@@ -22,50 +22,38 @@ def tf_idf(sentences, vocab=None):
     else:
         features = vocab
 
-    s = len(sentences)
+    n = len(sentences)
     f = len(features)
-    
-    # Initialize matrices
-    tf = np.zeros((s, f))
-    df = np.zeros(f)
-    
     feature_index = {word: i for i, word in enumerate(features)}
 
-    # Calculate TF and DF
-    for i, sentence_words in enumerate(processed_sentences):
-        if not sentence_words:
-            continue
-        
-        # Track words seen in this document for DF calculation
-        words_in_doc = set()
-        
-        for word in sentence_words:
-            if word in feature_index:
-                idx = feature_index[word]
-                tf[i, idx] += 1
-                words_in_doc.add(idx)
-        
-        # Normalize TF by total words in the sentence
-        # Note: In some variants, TF is just the raw count. 
-        # But for the 1.0 values in your example, we use raw counts
-        # or a specific normalization.
-        
-        for idx in words_in_doc:
-            df[idx] += 1
+    # Initialize Term Frequency and Document Frequency
+    tf = np.zeros((n, f))
+    df = np.zeros(f)
 
-    # Calculate IDF: ln(N / df)
-    # Using the natural log as is standard in many ML frameworks
-    idf = np.log(s / df)
-    
+    for i, words in enumerate(processed_sentences):
+        # Calculate TF (counts)
+        for word in words:
+            if word in feature_index:
+                tf[i, feature_index[word]] += 1
+        
+        # Calculate DF (binary presence)
+        for j, word in enumerate(features):
+            if word in words:
+                df[j] += 1
+
+    # Smoothed IDF: ln((1 + n) / (1 + df)) + 1
+    # This is the standard "smooth_idf=True" formula
+    idf = np.log((1 + n) / (1 + df)) + 1
+
     # Calculate TF-IDF
-    # We must handle division by zero for words not in the sentences
     embeddings = tf * idf
+
+    # L2 Normalization: divide each row by its Euclidean norm
+    # axis=1 computes the norm of each sentence vector
+    norms = np.linalg.norm(embeddings, axis=1, keepdims=True)
     
-    # L2 Normalization (Euclidean) per row
-    # Based on the output 0.707 (which is 1/sqrt(2)), the result is L2 normalized
-    norm = np.linalg.norm(embeddings, axis=1, keepdims=True)
-    # Avoid division by zero
-    embeddings = np.divide(embeddings, norm, out=np.zeros_like(embeddings),
-                           where=norm != 0)
+    # Avoid division by zero for empty sentences
+    embeddings = np.divide(embeddings, norms, out=np.zeros_like(embeddings),
+                           where=norms != 0)
 
     return embeddings, np.array(features)
