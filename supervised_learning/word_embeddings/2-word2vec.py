@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Function to create, build, and train a Word2Vec model using Gensim"""
-from gensim.models import Word2Vec
+import gensim
 
 
 def word2vec_model(sentences, vector_size=100, min_count=5, window=5,
@@ -13,7 +13,7 @@ def word2vec_model(sentences, vector_size=100, min_count=5, window=5,
     min_count:   minimum word frequency threshold
     window:      max distance between current and predicted word
     negative:    number of negative samples
-    cbow:        True → CBOW (sg=0), False → Skip-gram (sg=1)
+    cbow:        True -> CBOW (sg=0), False -> Skip-gram (sg=1)
     epochs:      number of training iterations
     seed:        random number generator seed
     workers:     number of worker threads
@@ -22,7 +22,7 @@ def word2vec_model(sentences, vector_size=100, min_count=5, window=5,
     """
     sg = 0 if cbow else 1
 
-    model = Word2Vec(
+    model = gensim.models.Word2Vec(
         sentences=sentences,
         vector_size=vector_size,
         min_count=min_count,
