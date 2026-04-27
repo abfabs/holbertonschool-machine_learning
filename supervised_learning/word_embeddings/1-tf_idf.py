@@ -49,7 +49,7 @@ def tf_idf(sentences, vocab=None):
 
     # L2 Normalization: divide each row by its Euclidean norm
     norms = np.linalg.norm(embeddings, axis=1, keepdims=True)
-    
+
     # Avoid division by zero for empty sentences
     embeddings = np.divide(embeddings, norms, out=np.zeros_like(embeddings),
                            where=norms != 0)
