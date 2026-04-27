@@ -35,21 +35,19 @@ def tf_idf(sentences, vocab=None):
         for word in words:
             if word in feature_index:
                 tf[i, feature_index[word]] += 1
-        
         # Calculate DF (binary presence)
+        words_set = set(words)
         for j, word in enumerate(features):
-            if word in words:
+            if word in words_set:
                 df[j] += 1
 
     # Smoothed IDF: ln((1 + n) / (1 + df)) + 1
-    # This is the standard "smooth_idf=True" formula
     idf = np.log((1 + n) / (1 + df)) + 1
 
     # Calculate TF-IDF
     embeddings = tf * idf
 
     # L2 Normalization: divide each row by its Euclidean norm
-    # axis=1 computes the norm of each sentence vector
     norms = np.linalg.norm(embeddings, axis=1, keepdims=True)
     
     # Avoid division by zero for empty sentences
