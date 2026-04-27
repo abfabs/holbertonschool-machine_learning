@@ -37,7 +37,7 @@ def uni_bleu(references, sentence):
     precision = clipped / len(sentence)
 
     ref_lengths = [len(ref) for ref in references]
-    closest_ref_len = min(ref_lengths, 
+    closest_ref_len = min(ref_lengths,
                           key=lambda r: (abs(r - len(sentence)), r))
 
     if len(sentence) > closest_ref_len:
